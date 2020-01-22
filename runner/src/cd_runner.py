@@ -40,7 +40,7 @@ print("Run config name: " + runConfig["name"])
 runDir = directoryFns.createRunDirectoryOrFailIfItAlreadyExists(globalConfig=globalConfig)
 
 try:
-  logDir = directoryFns.createLogDirectoryForRun(runDir=runDir, runConfig=runConfig)
+  logDir = directoryFns.createLogDirectoryForRun(globalConfig=globalConfig, runConfig=runConfig)
   checkoutGitRepository(config=config, globalConfig=globalConfig, runDir=runDir)
   runSteps = loadRunSteps(config=config)
   runnerObject = createRunnerObject(runConfig=runConfig, runSteps=runSteps, runDir=runDir, logDir=logDir)
