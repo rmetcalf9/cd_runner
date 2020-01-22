@@ -3,6 +3,7 @@ import sys
 import yaml
 import configValidator
 import baseapp_for_restapi_backend_with_swagger
+import directoryFns
 
 print("Start of cd_runner")
 
@@ -36,13 +37,15 @@ runConfig = loadConfigFile(sys.argv[1], validateFunction=configValidator.validat
 
 print("Run config name: " + runConfig["name"])
 
+runDir = directoryFns.createRunDirectoryOrFailIfItAlreadyExists(globalConfig=globalConfig)
 
-runDir = createRunDirectoryOrFailIfItAlreadyExists(globalConfig=globalConfig)
-logDir = createLogDirectory(globalConfig=globalConfig)
-checkoutGitRepository(config=config, globalConfig=globalConfig, runDir=runDir)
-runSteps = loadRunSteps(config=config)
-runnerObject = createRunnerObject(runConfig=runConfig, runSteps=runSteps, runDir=runDir, logDir=logDir)
-runnerObject.runAllSteps()
-cleanup(runConfig=runConfig)
+try:
+  logDir = directoryFns.createLogDirectoryForRun(runDir=runDir, runConfig=runConfig)
+  checkoutGitRepository(config=config, globalConfig=globalConfig, runDir=runDir)
+  runSteps = loadRunSteps(config=config)
+  runnerObject = createRunnerObject(runConfig=runConfig, runSteps=runSteps, runDir=runDir, logDir=logDir)
+  runnerObject.runAllSteps()
+finally:
+  directoryFns.cleanup(runDir=runDir)
 
 print("End of cd_runner")
