@@ -4,6 +4,7 @@ import yaml
 import configValidator
 import baseapp_for_restapi_backend_with_swagger
 import directoryFns
+import svnFns
 
 print("Start of cd_runner")
 
@@ -41,7 +42,7 @@ runDir = directoryFns.createRunDirectoryOrFailIfItAlreadyExists(globalConfig=glo
 
 try:
   logDir = directoryFns.createLogDirectoryForRun(globalConfig=globalConfig, runConfig=runConfig)
-  checkoutGitRepository(config=config, globalConfig=globalConfig, runDir=runDir)
+  svnFns.checkoutGitRepository(config=config, globalConfig=globalConfig, runDir=runDir)
   runSteps = loadRunSteps(config=config)
   runnerObject = createRunnerObject(runConfig=runConfig, runSteps=runSteps, runDir=runDir, logDir=logDir)
   runnerObject.runAllSteps()
