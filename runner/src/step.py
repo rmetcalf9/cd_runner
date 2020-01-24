@@ -8,6 +8,6 @@ def stepFactory(stepNum, stepKey, stepData):
   if "type" in stepData:
     stepType = stepData["type"]
   if stepType == "git-clone":
-    return stepGitCloneClass.stepGitCloneClass(stepName, stepType)
-  return stepNotImplementedClass.stepNotImplementedClass(stepName, stepType)
+    return stepGitCloneClass.stepGitCloneClass(stepName, stepType, stepData)
+  return stepNotImplementedClass.stepNotImplementedClass(stepName, stepType, stepData)
 

@@ -59,10 +59,11 @@ else:
 
 try:
   logDir = directoryFns.createLogDirectoryForRun(globalConfig=globalConfig, runConfig=runConfig)
+  main_clone = runDir + "/co/"
   if not skipClone:
     svnFns.checkoutGitRepository(runConfig=runConfig, globalConfig=globalConfig, runDir=runDir)
   runSteps = runSteps.loadRunSteps(ymlfile=runDir + "/co/" + runConfig["yamlfile"])
-  runnerObject = runner.createRunnerObject(runConfig=runConfig, runSteps=runSteps, runDir=runDir, logDir=logDir)
+  runnerObject = runner.createRunnerObject(runConfig=runConfig, runSteps=runSteps, runDir=runDir, logDir=logDir, main_clone=main_clone)
   runnerObject.runAllSteps()
 finally:
   directoryFns.cleanup(globalConfig=globalConfig)

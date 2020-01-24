@@ -2,8 +2,8 @@ import stepBaseClass
 
 
 class stepNotImplementedClass(stepBaseClass.stepBaseClass):
-  def __init__(self, name, stepType):
-    super().__init__(name, stepType)
+  def __init__(self, name, stepType, data):
+    super().__init__(name, stepType, data)
 
   # function not needed as base class defaults to true
   def isImplemented(self):
