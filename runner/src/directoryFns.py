@@ -14,6 +14,15 @@ def createLogDirectoryForRun(globalConfig, runConfig):
   if not os.path.isdir(logBase):
     os.mkdir(logBase)
   joblogdir = logBase + runConfig["name"]
+
+  logDir = joblogdir + "/" + '{0:%Y-%m-%d_%H%M}'.format(datetime.datetime.now())
+  if os.path.isdir(logDir):
+    if runConfig["overwriteExistingLogs"]:
+      print("Found old log directory - removing")
+      shutil.rmtree(logDir)
+    else:
+      raise Exception("A log directory already exists - aborting (Rerunning too quickly)")
+
   if os.path.isdir(joblogdir):
     if runConfig["numberOfPrevLogDirsToKeep"] is None:
       # We don't keep any previous logs so delete them all
@@ -22,19 +31,18 @@ def createLogDirectoryForRun(globalConfig, runConfig):
       os.mkdir(joblogdir)
     else:
       logDirList = os.listdir(joblogdir)
-      if len(logDirList) > runConfig["numberOfPrevLogDirsToKeep"]:
+      if len(logDirList) >= runConfig["numberOfPrevLogDirsToKeep"]:
         logDirList.sort()
-        print(logDirList)
-        raise Exception("Not implemented count log dirs and delete old")
+        numDirsToDelete = len(logDirList) - (runConfig["numberOfPrevLogDirsToKeep"] - 1)
+        dirsToDelete = []
+        for x in logDirList:
+          if len(dirsToDelete) < numDirsToDelete:
+            dirsToDelete.append(joblogdir + "/" + x)
+        for x in dirsToDelete:
+          print("Deleting old log dir - " + x)
+          shutil.rmtree(x)
   else:
     os.mkdir(joblogdir)
-  logDir = joblogdir + "/" + '{0:%Y-%m-%d_%H%M}'.format(datetime.datetime.now())
-  if os.path.isdir(logDir):
-    if runConfig["overwriteExistingLogs"]:
-      print("Found old log directory - removing")
-      shutil.rmtree(logDir)
-    else:
-      raise Exception("A log directory already exists - aborting (Rerunning too quickly)")
   os.mkdir(logDir)
   return logDir
 
