@@ -1,4 +1,5 @@
 import stepNotImplementedClass
+import stepGitCloneClass
 
 
 def stepFactory(stepNum, stepKey, stepData):
@@ -6,5 +7,7 @@ def stepFactory(stepNum, stepKey, stepData):
   stepType="freestyle"
   if "type" in stepData:
     stepType = stepData["type"]
+  if stepType == "git-clone":
+    return stepGitCloneClass.stepGitCloneClass(stepName, stepType)
   return stepNotImplementedClass.stepNotImplementedClass(stepName, stepType)
 

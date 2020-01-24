@@ -63,10 +63,6 @@ try:
     svnFns.checkoutGitRepository(runConfig=runConfig, globalConfig=globalConfig, runDir=runDir)
   runSteps = runSteps.loadRunSteps(ymlfile=runDir + "/co/" + runConfig["yamlfile"])
   runnerObject = runner.createRunnerObject(runConfig=runConfig, runSteps=runSteps, runDir=runDir, logDir=logDir)
-  if runConfig["requireAllStepsToBeImplemented"]:
-    if not runnerObject.isFullyImplemented():
-      print("Unimplemented step types:" + str(runnerObject.getUnimplementedStepTypeList()))
-      raise Exception("Not all step types are implemented")
   runnerObject.runAllSteps()
 finally:
   directoryFns.cleanup(globalConfig=globalConfig)
