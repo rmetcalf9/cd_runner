@@ -1,1 +1,2 @@
 basedir: ./example_basedir
+skipFinalCleanup: True

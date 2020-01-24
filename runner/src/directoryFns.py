@@ -2,8 +2,11 @@ import os
 import shutil
 import datetime
 
+def getrunDir(globalConfig):
+  return globalConfig["basedir"] + "/currentrun"
+
 def createRunDirectoryOrFailIfItAlreadyExists(globalConfig):
-  runDir =  globalConfig["basedir"] + "/currentrun"
+  runDir =  getrunDir(globalConfig)
   if os.path.isdir(runDir):
     raise Exception("A current run directory already exists - aborting")
   os.mkdir(runDir)
@@ -47,5 +50,12 @@ def createLogDirectoryForRun(globalConfig, runConfig):
   return logDir
 
 
-def cleanup(runDir):
-  shutil.rmtree(runDir)
+def cleanupAtStart(globalConfig):
+  runDir = getrunDir(globalConfig)
+  if os.path.isdir(runDir):
+    shutil.rmtree(runDir)
+
+def cleanup(globalConfig):
+  if not globalConfig["skipFinalCleanup"]:
+    cleanupAtStart(globalConfig=globalConfig)
+

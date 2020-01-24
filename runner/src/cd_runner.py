@@ -5,6 +5,7 @@ import configValidator
 import baseapp_for_restapi_backend_with_swagger
 import directoryFns
 import svnFns
+import runSteps
 
 print("Start of cd_runner")
 
@@ -17,10 +18,18 @@ globalConfigFile=baseapp_for_restapi_backend_with_swagger.readFromEnviroment(
 )
 #"example_globalConfig.yml"
 
-expectedNumberOfParams = 1
-if ((len(sys.argv) - 1) != expectedNumberOfParams):
-  print("Error wrong number of paramaters - expected " + str(expectedNumberOfParams) + " got " + str(len(sys.argv) - 1))
+if len(sys.argv) == 0:
+  print("Error - first param must be config file")
   exit(1)
+
+skipClone = False
+for x in sys.argv[2:]:
+  if x.upper() == "SKIPCLONE":
+    skipClone = True
+  else:
+    print("Error - unrecognised param " + x)
+    exit(1)
+
 
 def loadConfigFile(configFile, validateFunction):
   with open(configFile, 'r') as file:
@@ -38,15 +47,27 @@ runConfig = loadConfigFile(sys.argv[1], validateFunction=configValidator.validat
 
 print("Run config name: " + runConfig["name"])
 
-runDir = directoryFns.createRunDirectoryOrFailIfItAlreadyExists(globalConfig=globalConfig)
+runDir = ""
+if skipClone:
+  runDir = directoryFns.getrunDir(globalConfig=globalConfig)
+  if not os.path.isdir(runDir):
+    raise Exception("Slip clone requires the rundir to exist " + runDir)
+else:
+  directoryFns.cleanupAtStart(globalConfig=globalConfig)
+  runDir = directoryFns.createRunDirectoryOrFailIfItAlreadyExists(globalConfig=globalConfig)
 
 try:
   logDir = directoryFns.createLogDirectoryForRun(globalConfig=globalConfig, runConfig=runConfig)
-  svnFns.checkoutGitRepository(config=config, globalConfig=globalConfig, runDir=runDir)
-  runSteps = loadRunSteps(config=config)
+  if not skipClone:
+    svnFns.checkoutGitRepository(runConfig=runConfig, globalConfig=globalConfig, runDir=runDir)
+  runSteps = runSteps.loadRunSteps(ymlfile=runDir + "/co/" + runConfig["yamlfile"])
   runnerObject = createRunnerObject(runConfig=runConfig, runSteps=runSteps, runDir=runDir, logDir=logDir)
+  if runConfig["requireAllStepsToBeImplemented"]:
+    if not runnerObject.isFullyImplemented():
+      print("Unimplemented step types:" + runnerObject.getUnimplementedStepTypeList())
+      raise Exception("Not all step types are implemented")
   runnerObject.runAllSteps()
 finally:
-  directoryFns.cleanup(runDir=runDir)
+  directoryFns.cleanup(globalConfig=globalConfig)
 
 print("End of cd_runner")

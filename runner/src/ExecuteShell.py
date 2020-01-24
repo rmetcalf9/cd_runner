@@ -1,9 +1,10 @@
 import time
 import subprocess
+import os
 
-def executeAndWait(cmd, timeout):
+def executeAndWait(cmd, timeout, workingdir=None):
   job_env = dict()
-  # job_env = os.environ.copy()
+  job_env = os.environ.copy()
   start_time = time.time()
   proc = subprocess.Popen(
     cmd,
@@ -11,7 +12,7 @@ def executeAndWait(cmd, timeout):
     stdout=subprocess.PIPE,
     stderr=subprocess.STDOUT,
     shell=True,
-    cwd=None,
+    cwd=workingdir,
     preexec_fn=None,
     env=job_env
   )

@@ -1,3 +1,0 @@
-name: DockJob_Deploypipeline
-overwriteExistingLogs: True
-numberOfPrevLogDirsToKeep: 5 #none means keep all

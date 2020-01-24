@@ -7,5 +7,5 @@ fi
 
 export CDRUNNER_GLOBCONFIGFILE="$(pwd)/example_globalConfig.yml"
 
-${PYTHON_CMD} ./src/cd_runner.py ./example_dockjob.yml
+${PYTHON_CMD} ./src/cd_runner.py ./example_thumbsum.yml "$@"
 
