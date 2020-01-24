@@ -6,6 +6,7 @@ import baseapp_for_restapi_backend_with_swagger
 import directoryFns
 import svnFns
 import runSteps
+import runner
 
 print("Start of cd_runner")
 
@@ -61,10 +62,10 @@ try:
   if not skipClone:
     svnFns.checkoutGitRepository(runConfig=runConfig, globalConfig=globalConfig, runDir=runDir)
   runSteps = runSteps.loadRunSteps(ymlfile=runDir + "/co/" + runConfig["yamlfile"])
-  runnerObject = createRunnerObject(runConfig=runConfig, runSteps=runSteps, runDir=runDir, logDir=logDir)
+  runnerObject = runner.createRunnerObject(runConfig=runConfig, runSteps=runSteps, runDir=runDir, logDir=logDir)
   if runConfig["requireAllStepsToBeImplemented"]:
     if not runnerObject.isFullyImplemented():
-      print("Unimplemented step types:" + runnerObject.getUnimplementedStepTypeList())
+      print("Unimplemented step types:" + str(runnerObject.getUnimplementedStepTypeList()))
       raise Exception("Not all step types are implemented")
   runnerObject.runAllSteps()
 finally:

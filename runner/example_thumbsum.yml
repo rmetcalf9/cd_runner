@@ -2,5 +2,5 @@ name: ThumbSum_Deploypipeline
 overwriteExistingLogs: True
 numberOfPrevLogDirsToKeep: 5 #none means keep all
 svnsource: git@gitlab.com:rmetcalf9/saas_thumbsum.git
-requireAllStepsToBeImplemented: True
+requireAllStepsToBeImplemented: False
 yamlfile: /codefresh.yml #releaive to base of the repo
