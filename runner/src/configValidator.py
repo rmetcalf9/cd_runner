@@ -9,10 +9,11 @@ def validateRunConfig(config):
 
   noneOrNumberParams = ["numberOfPrevLogDirsToKeep"]
   for x in noneOrNumberParams:
-    if config[x].upper() == "NONE":
-      config[x] = None
-    else:
-      config[x] = int(config[x])
+    if not isinstance(config[x], int):
+      if config[x].upper() == "NONE":
+        config[x] = None
+      else:
+        raise Exception("Invalid run config - " + x + " must be an integer")
 
 def validateGlobalConfig(config):
   if "basedir" not in config:

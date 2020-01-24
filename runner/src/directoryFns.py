@@ -21,7 +21,11 @@ def createLogDirectoryForRun(globalConfig, runConfig):
       shutil.rmtree(joblogdir)
       os.mkdir(joblogdir)
     else:
-      raise Exception("Not implemented count log dirs and delete old")
+      logDirList = os.listdir(joblogdir)
+      if len(logDirList) > runConfig["numberOfPrevLogDirsToKeep"]:
+        logDirList.sort()
+        print(logDirList)
+        raise Exception("Not implemented count log dirs and delete old")
   else:
     os.mkdir(joblogdir)
   logDir = joblogdir + "/" + '{0:%Y-%m-%d_%H%M}'.format(datetime.datetime.now())
