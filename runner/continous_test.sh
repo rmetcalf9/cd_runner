@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#pyCharm will run in project root directory. Check if we are here and if so then change int oservices directory
-if [ -d "./services" ]; then
-  echo "Changing into services directory"
-  cd ./services
+#pyCharm will run in project root directory. Check if we are here and if so then change directory
+if [ -d "./runner" ]; then
+  echo "Changing into runner directory"
+  cd ./runner
 fi
 
 

@@ -1,8 +1,19 @@
 #!/bin/bash
 
+#pyCharm will run in project root directory. Check if we are here and if so then change to directory
+if [ -d "./runner" ]; then
+  echo "Changing into services directory"
+  cd ./runner
+fi
+
+
 PYTHON_CMD=python3
 if [ E${EXTPYTHONCMD} != "E" ]; then
   PYTHON_CMD=${EXTPYTHONCMD}
+fi
+
+if [ ! -d ./exmaple_basedir ]; then
+  mkdir ./example_basedir
 fi
 
 export CDRUNNER_GLOBCONFIGFILE="$(pwd)/example_globalConfig.yml"
