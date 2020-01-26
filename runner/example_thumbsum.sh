@@ -12,11 +12,14 @@ if [ E${EXTPYTHONCMD} != "E" ]; then
   PYTHON_CMD=${EXTPYTHONCMD}
 fi
 
-if [ ! -d ./exmaple_basedir ]; then
+if [ ! -d ./example_basedir ]; then
   mkdir ./example_basedir
 fi
 
 export CDRUNNER_GLOBCONFIGFILE="$(pwd)/example_globalConfig.yml"
+
+echo "AA"
+echo $(pwd)
 
 ${PYTHON_CMD} ./src/cd_runner.py ./example_thumbsum.yml "$@"
 
