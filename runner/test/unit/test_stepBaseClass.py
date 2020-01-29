@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import Mock
 import stepBaseClass
 
 class test_stepBaseClass(unittest.TestCase):
@@ -7,8 +8,9 @@ class test_stepBaseClass(unittest.TestCase):
     stepData = {
       "notListNoReplace": "ABC123",
       "listNoReplace": [ "AA", "BB" ],
-      "notListNoReplace": "ABC${{tobereplaced}}123",
-      "listNoReplace": ["AA", "C${{tobereplaced2}}"]
+      "notListReplace": "ABC${{tobereplaced}}123",
+      "listReplace": ["AA", "C${{tobereplaced2}}"],
+      "notFoundNoReplace": "ABC${{nottobereplaced}}123"
     }
     obj = stepBaseClass.stepBaseClass(
       name=None,
@@ -16,6 +18,28 @@ class test_stepBaseClass(unittest.TestCase):
       data=stepData
     )
     replaceData = {
-      "tobereplaced": "REPLACED!!!"
+      "tobereplaced": "REPLACED!!!",
+      "tobereplaced2": "xx34!!!"
     }
-    raise Exception("Test not implemented")
+    mockStepLogger = Mock()
+    obj.replaceEnvVars(runEnv=replaceData, stepLogger=mockStepLogger)
+
+    ExpectedLogMessage = " - replaced 2 environment vars found in step yaml"
+    mockStepLogger.assert_called_once_with(ExpectedLogMessage)
+
+    expectedFinalStepData = {
+      "notListNoReplace": "ABC123",
+      "listNoReplace": [ "AA", "BB" ],
+      "notListNoReplace": "ABCREPLACED!!!123",
+      "listNoReplace": ["AA", "Cxx34!!!"],
+      "notFoundNoReplace": "ABC${{nottobereplaced}}123"
+    }
+    python_Testing_Utilities.assertObjectsEqual(
+      unittestTestCaseClass=self,
+      first=obj.data,
+      second=expectedFinalStepData,
+      msg="Wrong final data",
+      ignoredRootKeys=[]
+    )
+
+#TODO Test two vars on one line
