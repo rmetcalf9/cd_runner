@@ -10,7 +10,9 @@ class test_stepBaseClass(unittest.TestCase):
       "listNoReplace": [ "AA", "BB" ],
       "notListReplace": "ABC${{tobereplaced}}123",
       "listReplace": ["AA", "C${{tobereplaced2}}"],
-      "notFoundNoReplace": "ABC${{nottobereplaced}}123"
+      "notFoundNoReplace": "ABC${{nottobereplaced}}123",
+      "brokenNoCLose": "ABC${{123",
+      "brokenNoCloseAtStart": "${{123"
     }
     obj = stepBaseClass.stepBaseClass(
       name=None,
