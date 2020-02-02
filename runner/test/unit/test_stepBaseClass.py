@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import Mock
 import stepBaseClass
+import python_Testing_Utilities
 
 class test_stepBaseClass(unittest.TestCase):
 
@@ -32,9 +33,11 @@ class test_stepBaseClass(unittest.TestCase):
     expectedFinalStepData = {
       "notListNoReplace": "ABC123",
       "listNoReplace": [ "AA", "BB" ],
-      "notListNoReplace": "ABCREPLACED!!!123",
-      "listNoReplace": ["AA", "Cxx34!!!"],
-      "notFoundNoReplace": "ABC${{nottobereplaced}}123"
+      "notListReplace": "ABCREPLACED!!!123",
+      "listReplace": ["AA", "Cxx34!!!"],
+      "notFoundNoReplace": "ABC${{nottobereplaced}}123",
+      "brokenNoCLose": "ABC${{123",
+      "brokenNoCloseAtStart": "${{123"
     }
     python_Testing_Utilities.assertObjectsEqual(
       unittestTestCaseClass=self,

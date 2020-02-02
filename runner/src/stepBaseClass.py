@@ -5,12 +5,19 @@ STEPOUTCOME_NOTIMPLEMENTED=2
 class replacementToken:
   str=None
   def __init__(self, str):
-    self.str = str.strip()
+    self.str = str
 
-  def getOutput(self):
+  def getOutput(self, runEnv):
+
+    if self.str.strip() in runEnv:
+      return {
+        "newVal": runEnv[self.str.strip()],
+        "replaced": True
+      }
+
     return {
-      "newVal": "__TODO__" + self.str + "_",
-      "replaced": True
+      "newVal": "${{" + self.str + "}}",
+      "replaced": False
     }
 
 class stepBaseClass():
@@ -64,7 +71,7 @@ class stepBaseClass():
       if (isinstance(x, str)):
         newVal += x
       else:
-        retVal = x.getOutput()
+        retVal = x.getOutput(runEnv=runEnv)
         newVal += retVal["newVal"]
         if retVal["replaced"]:
           totalReplaced += 1
